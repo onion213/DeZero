@@ -1,0 +1,23 @@
+name: format and lint on push and PR
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  format-check:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+      - run: pip install poetry
+      - run: poetry install
+      - run: poetry run isort . --check-only
+      - run: poetry run black . --check
+      - run: poetry run pflake8
+      - run: poetry run pytest
+
