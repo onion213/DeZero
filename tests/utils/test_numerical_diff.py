@@ -9,7 +9,7 @@ class TestNumericalDiff:
     def test_数値微分ができる(self):
         # Arrange
         f = Square()
-        v = Variable(np.array(1))
+        v = Variable(np.array((1,)))
         eps = 10e-4
 
         # Act

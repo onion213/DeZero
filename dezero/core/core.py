@@ -1,12 +1,16 @@
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
 
 
 class Variable:
     def __init__(self, data: np.ndarray) -> None:
+        if data is not None:
+            if not isinstance(data, np.ndarray):
+                raise TypeError(f"data must be np.ndarray. given: {type(data)}")
+
         self.data: np.ndarray = data
-        self.grad: Optional[np.float64] = None
+        self.grad: Optional[np.ndarray] = None
         self.creater: Optional["Function"] = None
 
     def set_creater(self, func: "Function") -> None:
@@ -15,6 +19,9 @@ class Variable:
     def backward(self):
         if self.creater is None:
             raise AttributeError("`creater` is not set for this variable.")
+
+        if self.grad is None:
+            self.grad = np.ones_like(self.data)
 
         funcs = [self.creater]
         while funcs:
@@ -26,11 +33,17 @@ class Variable:
                 funcs.append(x.creater)
 
 
+def as_array(x: Union[np.ndarray, np.number]) -> np.ndarray:
+    if np.isscalar(x):
+        return np.array(x)
+    return x
+
+
 class Function:
     def __call__(self, input: Variable) -> Variable:
         x = input.data
         y = self.forward(x)
-        output = Variable(y)
+        output = Variable(as_array(y))
         output.set_creater(self)
         self.output = output
         self.input = input
@@ -39,5 +52,5 @@ class Function:
     def forward(self, x: np.ndarray) -> np.ndarray:
         raise NotImplementedError()
 
-    def backward(self, gy: np.float64) -> np.float64:
+    def backward(self, gy: np.ndarray) -> np.ndarray:
         raise NotImplementedError()
