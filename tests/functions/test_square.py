@@ -18,13 +18,14 @@ class TestExp:
         # Arrange
         f = Square()
         v = Variable(np.array(input))
+        expected_output = np.power(input, 2)
 
         # Act
         o = f(v)
 
         # Assert
         assert isinstance(o, Variable)
-        assert o.data == np.power(input, 2)
+        np.testing.assert_array_equal(o.data, expected_output)
 
     @pytest.mark.parametrize("input, gy", list(params["backward"].values()), ids=params["backward"].keys())
     def test_backwardの計算が正しく行われること(self, input, gy):
