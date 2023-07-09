@@ -9,7 +9,7 @@ from dezero.functions import Square
 
 class TestExp:
     params = {
-        "__call__": {f"e^{i}": (i,) for i in (0, 1, 2, -1, 0.1)},
+        "__call__": {f"e^{i}": i for i in (0, 1, 2, -1, 0.1)},
         "backward": {f"x={x},gy={gy}": (x, gy) for x in (0, 1, 2, -1, 0.1) for gy in (0, 1, 2, -1, 0.1)},
     }
 
@@ -18,14 +18,14 @@ class TestExp:
         # Arrange
         f = Square()
         v = Variable(np.array(input))
-        expected_output = np.power(input, 2)
+        expected_output = np.array(input**2)
 
         # Act
         o = f(v)
 
         # Assert
         assert isinstance(o, Variable)
-        np.testing.assert_array_equal(o.data, expected_output)
+        assert o.data == expected_output
 
     @pytest.mark.parametrize("input, gy", list(params["backward"].values()), ids=params["backward"].keys())
     def test_backwardの計算が正しく行われること(self, input, gy):
