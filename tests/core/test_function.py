@@ -1,8 +1,7 @@
 import numpy as np
 import pytest
 
-from dezero.functions.function import Function
-from dezero.variable import Variable
+from dezero.core import Function, Variable
 
 
 class TestFunction:

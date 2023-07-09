@@ -3,8 +3,8 @@ from typing import Union
 import numpy as np
 import pytest
 
+from dezero.core import Variable
 from dezero.functions import Square
-from dezero.variable import Variable
 
 
 class TestExp:
