@@ -1,10 +1,14 @@
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
 
 
 class Variable:
     def __init__(self, data: np.ndarray) -> None:
+        if data is not None:
+            if not isinstance(data, np.ndarray):
+                raise TypeError(f"data must be np.ndarray. given: {type(data)}")
+
         self.data: np.ndarray = data
         self.grad: Optional[np.ndarray] = None
         self.creater: Optional["Function"] = None
@@ -29,11 +33,17 @@ class Variable:
                 funcs.append(x.creater)
 
 
+def as_array(x: Union[np.ndarray, np.number]) -> np.ndarray:
+    if np.isscalar(x):
+        return np.array(x)
+    return x
+
+
 class Function:
     def __call__(self, input: Variable) -> Variable:
         x = input.data
         y = self.forward(x)
-        output = Variable(y)
+        output = Variable(as_array(y))
         output.set_creater(self)
         self.output = output
         self.input = input

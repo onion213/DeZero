@@ -27,6 +27,17 @@ class TestVariable:
         # Assert
         assert e.type == TypeError
 
+    def test_データにndarray以外を渡した場合初期化できないこと(self):
+        # Arrange
+        with pytest.raises(TypeError) as e:
+            _ = Variable(1.0)
+
+        # Act
+        # Nothing for this case
+
+        # Assert
+        assert e.type == TypeError
+
     def test_初期化後にデータを代入できること(self):
         # Arrange
         var = Variable(np.array(1.0))
