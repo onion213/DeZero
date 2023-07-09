@@ -13,11 +13,17 @@ class Variable:
         self.creater = func
 
     def backward(self):
-        f = self.creater
-        if f is not None:
-            x = f.input
-            x.grad = f.backward(self.grad)
-            x.backward()
+        if self.creater is None:
+            raise AttributeError("`creater` is not set for this variable.")
+
+        funcs = [self.creater]
+        while funcs:
+            f = funcs.pop()
+            x, y = f.input, f.output
+            x.grad = f.backward(y.grad)
+
+            if x.creater is not None:
+                funcs.append(x.creater)
 
 
 class Function:
