@@ -6,7 +6,7 @@ import numpy as np
 class Variable:
     def __init__(self, data: np.ndarray) -> None:
         self.data: np.ndarray = data
-        self.grad: Optional[np.float64] = None
+        self.grad: Optional[np.ndarray] = None
         self.creater: Optional["Function"] = None
 
     def set_creater(self, func: "Function") -> None:
@@ -15,6 +15,9 @@ class Variable:
     def backward(self):
         if self.creater is None:
             raise AttributeError("`creater` is not set for this variable.")
+
+        if self.grad is None:
+            self.grad = np.ones_like(self.data)
 
         funcs = [self.creater]
         while funcs:
@@ -39,5 +42,5 @@ class Function:
     def forward(self, x: np.ndarray) -> np.ndarray:
         raise NotImplementedError()
 
-    def backward(self, gy: np.float64) -> np.float64:
+    def backward(self, gy: np.ndarray) -> np.ndarray:
         raise NotImplementedError()
