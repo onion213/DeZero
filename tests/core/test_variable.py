@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from dezero.variable import Variable
+from dezero.core import Function, Variable
 
 
 class TestVariable:
@@ -37,3 +37,14 @@ class TestVariable:
         # assert
         assert isinstance(var, Variable)
         assert var.data == np.array(2.0)
+
+    def test_set_createrメソッドでcreaterを保存できること(self):
+        # Arrange
+        var = Variable(np.array(1.0))
+        func = Function()
+
+        # Act
+        var.set_creater(func)
+
+        # assert
+        assert var.creater == func

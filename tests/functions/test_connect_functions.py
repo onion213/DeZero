@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
+from dezero.core import Variable
 from dezero.functions import Exp, Square
-from dezero.variable import Variable
 
 
 class TestConnectFunctions:
@@ -21,3 +21,26 @@ class TestConnectFunctions:
         # Assert
         assert isinstance(o, Variable)
         assert o.data == expected_output
+
+    def test_連結した関数で逆電波が正しく行われる(self):
+        # Arrange
+        input = np.array(0.5)
+        sq1 = Square()
+        exp = Exp()
+        sq2 = Square()
+
+        def f(v: Variable) -> Variable:
+            return sq2(exp(sq1(v)))
+
+        x = Variable(np.array(input))
+        y = f(x)
+        y.grad = np.array(1.0)
+
+        expected_x_grad = 2 * 0.5 * np.exp(0.5**2) * 2 * np.exp(0.5**2)
+
+        # Act
+        y.backward()
+
+        # Assert
+        assert x.grad is not None
+        assert x.grad == expected_x_grad

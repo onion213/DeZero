@@ -1,4 +1,4 @@
-from dezero.variable import Variable
+from dezero.core import Variable
 
 
 def numerical_diff(f, x, eps=1e-4):

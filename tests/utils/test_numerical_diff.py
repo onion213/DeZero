@@ -1,8 +1,8 @@
 import numpy as np
 
+from dezero.core import Variable
 from dezero.functions import Square
 from dezero.utils import numerical_diff
-from dezero.variable import Variable
 
 
 class TestNumericalDiff:
