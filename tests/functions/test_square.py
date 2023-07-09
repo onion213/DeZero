@@ -7,9 +7,9 @@ from dezero.core import Variable
 from dezero.functions import Square
 
 
-class TestExp:
+class TestSquare:
     params = {
-        "__call__": {f"e^{i}": i for i in (0, 1, 2, -1, 0.1)},
+        "__call__": {f"x={x}": x for x in (0, 1, 2, -1, 0.1)},
         "backward": {f"x={x},gy={gy}": (x, gy) for x in (0, 1, 2, -1, 0.1) for gy in (0, 1, 2, -1, 0.1)},
     }
 
@@ -18,7 +18,7 @@ class TestExp:
         # Arrange
         f = Square()
         v = Variable(np.array(input))
-        expected_output = np.array(input**2)
+        expected_output = np.array(v.data**2)
 
         # Act
         o = f(v)
@@ -33,14 +33,14 @@ class TestExp:
         f = Square()
         v = Variable(np.array(input))
         _ = f(v)
-        gy = np.float64(gy)
+        gy = np.array(gy)
+        expected_output = 2 * v.data * gy
 
         # Act
         gx = f.backward(gy)
 
         # Assert
-        assert isinstance(gx, np.float64)
-        assert gx == 2 * input * gy
+        assert gx == expected_output
 
     def test_forwardされていない関数でbackwardをすると例外が発生する(self):
         # Arrange

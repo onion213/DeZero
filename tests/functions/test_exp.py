@@ -32,14 +32,14 @@ class TestExp:
         f = Exp()
         v = Variable(np.array(input))
         _ = f(v)
-        gy = np.float64(gy)
+        gy = np.array(gy)
+        expected_output = np.exp(v.data) * gy
 
         # Act
         gx = f.backward(gy)
 
         # Assert
-        assert isinstance(gx, np.float64)
-        assert gx == np.exp(input) * gy
+        assert gx == expected_output
 
     def test_forwardされていない関数でbackwardをすると例外が発生する(self):
         # Arrange
