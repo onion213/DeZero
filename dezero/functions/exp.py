@@ -8,6 +8,7 @@ class Exp(Function):
         return np.exp(x)
 
     def backward(self, gy: np.ndarray) -> np.ndarray:
-        x: np.ndarray = self.input.data
-        gx: np.float64 = np.exp(x) * gy
+        x: np.ndarray = self.inputs[0].data
+
+        gx: np.ndarray = np.exp(x) * gy
         return gx

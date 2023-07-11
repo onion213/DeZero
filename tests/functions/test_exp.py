@@ -23,8 +23,8 @@ class TestExp:
         o = f(v)
 
         # Assert
-        assert isinstance(o, Variable)
-        assert o.data == np.exp(input)
+        assert isinstance(o[0], Variable)
+        assert o[0].data == np.exp(input)
 
     @pytest.mark.parametrize("input, gy", list(params["backward"].values()), ids=params["backward"].keys())
     def test_backwardの計算が正しく行われること(self, input, gy):
