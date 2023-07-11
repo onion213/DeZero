@@ -16,4 +16,4 @@ class TestNumericalDiff:
         d = numerical_diff(f, v, eps)
 
         # Assert
-        assert np.allclose(2, d)  # allowed error is just fake implmentation for now
+        assert np.allclose(2, d)

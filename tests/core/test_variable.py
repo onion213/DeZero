@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 from dezero.core import Function, Variable
+from dezero.functions import Square
 
 
 class TestVariable:
@@ -59,3 +60,15 @@ class TestVariable:
 
         # assert
         assert var.creater == func
+
+    def test_逆伝播を正しく行える(self):
+        # Arrange
+        x = Variable(np.array(1.0))
+        func = Square()
+        y = func(x)[0]
+
+        # Act
+        y.backward()
+
+        # assert
+        assert x.grad == np.array(2.0)

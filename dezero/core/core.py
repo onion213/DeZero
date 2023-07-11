@@ -26,11 +26,13 @@ class Variable:
         funcs = [self.creater]
         while funcs:
             f = funcs.pop()
-            x, y = f.input, f.output
-            x.grad = f.backward(y.grad)
+            gys = tuple(output.grad for output in f.outputs)
+            gxs = f.backward(*gys)
 
-            if x.creater is not None:
-                funcs.append(x.creater)
+            for x, gx in zip(f.inputs, gxs):
+                x.grad = gx
+                if x.creater is not None:
+                    funcs.append(x.creater)
 
 
 def as_array(x: Union[np.ndarray, np.number]) -> np.ndarray:
@@ -40,17 +42,19 @@ def as_array(x: Union[np.ndarray, np.number]) -> np.ndarray:
 
 
 class Function:
-    def __call__(self, input: Variable) -> Variable:
-        x = input.data
-        y = self.forward(x)
-        output = Variable(as_array(y))
-        output.set_creater(self)
-        self.output = output
-        self.input = input
-        return output
+    def __call__(self, *inputs: Variable) -> tuple[Variable, ...]:
+        xs = (input.data for input in inputs)
+        ys = self.forward(*xs)
+        outputs = tuple(Variable(as_array(y)) for y in ys)
 
-    def forward(self, x: np.ndarray) -> np.ndarray:
+        for output in outputs:
+            output.set_creater(self)
+        self.inputs = tuple(inputs)
+        self.outputs = outputs
+        return outputs
+
+    def forward(self, *xs: np.ndarray) -> tuple[np.ndarray, ...]:
         raise NotImplementedError()
 
-    def backward(self, gy: np.ndarray) -> np.ndarray:
+    def backward(self, *gys: np.ndarray) -> tuple[np.ndarray, ...]:
         raise NotImplementedError()
