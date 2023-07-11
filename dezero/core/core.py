@@ -26,8 +26,10 @@ class Variable:
         funcs = [self.creater]
         while funcs:
             f = funcs.pop()
-            gys = tuple(output.grad for output in f.outputs)
+            gys: tuple[np.ndarray] = tuple(output.grad for output in f.outputs)
             gxs = f.backward(*gys)
+            if not isinstance(gxs, tuple):
+                gxs = (gxs,)
 
             for x, gx in zip(f.inputs, gxs):
                 x.grad = gx
@@ -45,6 +47,8 @@ class Function:
     def __call__(self, *inputs: Variable) -> tuple[Variable, ...]:
         xs = (input.data for input in inputs)
         ys = self.forward(*xs)
+        if not isinstance(ys, tuple):
+            ys = (ys,)
         outputs = tuple(Variable(as_array(y)) for y in ys)
 
         for output in outputs:
@@ -53,8 +57,8 @@ class Function:
         self.outputs = outputs
         return outputs
 
-    def forward(self, *xs: np.ndarray) -> tuple[np.ndarray, ...]:
+    def forward(self, *xs: np.ndarray) -> Union[np.ndarray, tuple[np.ndarray, ...]]:
         raise NotImplementedError()
 
-    def backward(self, *gys: np.ndarray) -> tuple[np.ndarray, ...]:
+    def backward(self, *gys: np.ndarray) -> Union[np.ndarray, tuple[np.ndarray, ...]]:
         raise NotImplementedError()
