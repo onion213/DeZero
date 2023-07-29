@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from dezero.core import Function, Variable
-from dezero.functions import Square
+from dezero.functions import Add, Square
 
 
 class TestVariable:
@@ -46,7 +46,7 @@ class TestVariable:
         # Act
         var.data = np.array(2.0)
 
-        # assert
+        # Assert
         assert isinstance(var, Variable)
         assert var.data == np.array(2.0)
 
@@ -58,17 +58,48 @@ class TestVariable:
         # Act
         var.set_creater(func)
 
-        # assert
+        # Assert
         assert var.creater == func
 
     def test_逆伝播を正しく行える(self):
         # Arrange
         x = Variable(np.array(1.0))
         func = Square()
-        y = func(x)[0]
+        y = func(x)
 
         # Act
         y.backward()
 
-        # assert
+        # Assert
         assert x.grad == np.array(2.0)
+
+    def test_変数を繰り返し使用できる(self):
+        # Arrange
+        x = Variable(np.array(3))
+        func = Add()
+        y = func(x, x)
+
+        # Act
+        y.backward()
+
+        # Assert
+        assert y.grad == np.array(1.0)
+        assert x.grad == np.array(2.0)
+
+    def test_変数のgradを初期化できる(self):
+        # Arrange
+        x = Variable(np.array(3))
+
+        def add(x1, x2):
+            return Add()(x1, x2)
+
+        y1 = add(x, x)
+        y1.backward()
+        y2 = add(add(x, x), x)
+
+        # Act
+        x.cleargrad()
+        y2.backward()
+
+        # Assert
+        assert x.grad == np.array(3.0)

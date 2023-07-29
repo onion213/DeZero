@@ -30,9 +30,8 @@ class TestAdd:
         o = f(v0, v1)
 
         # Assert
-        assert len(o) == 1
-        assert isinstance(o[0], Variable)
-        assert o[0].data == expected_output
+        assert isinstance(o, Variable)
+        assert o.data == expected_output
 
     @pytest.mark.parametrize("x0, x1, gy", list(params["backward"].values()), ids=params["backward"].keys())
     def test_backwardの計算が正しく行われること(self, x0, x1, gy):

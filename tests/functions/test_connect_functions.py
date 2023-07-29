@@ -16,7 +16,7 @@ class TestConnectFunctions:
         v = Variable(np.array(input))
 
         def f(v: Variable) -> Variable:
-            return sq(exp(sq(v)[0])[0])[0]
+            return sq(exp(sq(v)))
 
         # Act
         o = f(v)
@@ -33,7 +33,7 @@ class TestConnectFunctions:
         sq2 = Square()
 
         def f(v: Variable) -> Variable:
-            return sq2(exp(sq1(v)[0])[0])[0]
+            return sq2(exp(sq1(v)))
 
         x = Variable(np.array(input))
         y = f(x)
