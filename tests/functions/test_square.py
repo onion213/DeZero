@@ -24,9 +24,8 @@ class TestSquare:
         o = f(v)
 
         # Assert
-        assert len(o) == 1
-        assert isinstance(o[0], Variable)
-        assert o[0].data == expected_output
+        assert isinstance(o, Variable)
+        assert o.data == expected_output
 
     @pytest.mark.parametrize("input, gy", list(params["backward"].values()), ids=params["backward"].keys())
     def test_backwardの計算が正しく行われること(self, input, gy):

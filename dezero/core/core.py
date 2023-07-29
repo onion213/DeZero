@@ -32,9 +32,15 @@ class Variable:
                 gxs = (gxs,)
 
             for x, gx in zip(f.inputs, gxs):
-                x.grad = gx
+                if x.grad is None:
+                    x.grad = gx
+                else:
+                    x.grad = x.grad + gx
                 if x.creater is not None:
                     funcs.append(x.creater)
+
+    def cleargrad(self) -> None:
+        self.grad = None
 
 
 def as_array(x: Union[np.ndarray, np.number]) -> np.ndarray:
@@ -44,7 +50,7 @@ def as_array(x: Union[np.ndarray, np.number]) -> np.ndarray:
 
 
 class Function:
-    def __call__(self, *inputs: Variable) -> tuple[Variable, ...]:
+    def __call__(self, *inputs: Variable) -> Union[Variable, tuple[Variable, ...]]:
         xs = (input.data for input in inputs)
         ys = self.forward(*xs)
         if not isinstance(ys, tuple):
@@ -55,7 +61,7 @@ class Function:
             output.set_creater(self)
         self.inputs = tuple(inputs)
         self.outputs = outputs
-        return outputs
+        return outputs if len(outputs) > 1 else outputs[0]
 
     def forward(self, *xs: np.ndarray) -> Union[np.ndarray, tuple[np.ndarray, ...]]:
         raise NotImplementedError()
