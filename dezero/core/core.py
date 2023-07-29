@@ -11,19 +11,19 @@ class Variable:
 
         self.data: np.ndarray = data
         self.grad: Optional[np.ndarray] = None
-        self.creater: Optional["Function"] = None
+        self.creator: Optional["Function"] = None
 
-    def set_creater(self, func: "Function") -> None:
-        self.creater = func
+    def set_creator(self, func: "Function") -> None:
+        self.creator = func
 
     def backward(self):
-        if self.creater is None:
-            raise AttributeError("`creater` is not set for this variable.")
+        if self.creator is None:
+            raise AttributeError("`creator` is not set for this variable.")
 
         if self.grad is None:
             self.grad = np.ones_like(self.data)
 
-        funcs = [self.creater]
+        funcs = [self.creator]
         while funcs:
             f = funcs.pop()
             gys: tuple[np.ndarray] = tuple(output.grad for output in f.outputs)
@@ -36,8 +36,8 @@ class Variable:
                     x.grad = gx
                 else:
                     x.grad = x.grad + gx
-                if x.creater is not None:
-                    funcs.append(x.creater)
+                if x.creator is not None:
+                    funcs.append(x.creator)
 
     def cleargrad(self) -> None:
         self.grad = None
@@ -58,7 +58,7 @@ class Function:
         outputs = tuple(Variable(as_array(y)) for y in ys)
 
         for output in outputs:
-            output.set_creater(self)
+            output.set_creator(self)
         self.inputs = tuple(inputs)
         self.outputs = outputs
         return outputs if len(outputs) > 1 else outputs[0]

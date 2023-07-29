@@ -50,16 +50,16 @@ class TestVariable:
         assert isinstance(var, Variable)
         assert var.data == np.array(2.0)
 
-    def test_set_createrメソッドでcreaterを保存できること(self):
+    def test_set_creatorメソッドでcreatorを保存できること(self):
         # Arrange
         var = Variable(np.array(1.0))
         func = Function()
 
         # Act
-        var.set_creater(func)
+        var.set_creator(func)
 
         # Assert
-        assert var.creater == func
+        assert var.creator == func
 
     def test_逆伝播を正しく行える(self):
         # Arrange
