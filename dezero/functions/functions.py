@@ -4,16 +4,25 @@ from dezero.functions.exp import Exp
 from dezero.functions.square import Square
 
 
-def exp(x: Variable) -> tuple[Variable]:
+def exp(x: Variable) -> Variable:
     f = Exp()
-    return f(x)
+    y = f(x)
+    if not isinstance(y, Variable):
+        raise TypeError(f"`Exp` is 1-value function, but not returns Variable. returned value: {y}")
+    return y
 
 
-def square(x: Variable) -> tuple[Variable]:
+def square(x: Variable) -> Variable:
     f = Square()
-    return f(x)
+    y = f(x)
+    if not isinstance(y, Variable):
+        raise TypeError(f"`Square` is 1-value function, but not returns Variable. returned value: {y}")
+    return y
 
 
-def add(x0: Variable, x1: Variable) -> tuple[Variable]:
+def add(x0: Variable, x1: Variable) -> Variable:
     f = Add()
-    return f(x0, x1)
+    y = f(x0, x1)
+    if not isinstance(y, Variable):
+        raise TypeError(f"`Add` is 1-value function, but not returns Variable. returned value: {y}")
+    return y
