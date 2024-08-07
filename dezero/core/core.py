@@ -3,6 +3,8 @@ from typing import Optional, Union
 
 import numpy as np
 
+from dezero.core.config import Config
+
 
 class Variable:
     def __init__(self, data: np.ndarray) -> None:
@@ -80,12 +82,13 @@ class Function:
             ys = (ys,)
         outputs = tuple(Variable(as_array(y)) for y in ys)
 
-        self.generation = max(input.generation for input in inputs)
+        if Config.enable_backprop:
+            self.generation = max(input.generation for input in inputs)
 
-        for output in outputs:
-            output.set_creator(self)
-        self.inputs = tuple(inputs)
-        self.outputs = tuple(weakref.ref(output) for output in outputs)
+            for output in outputs:
+                output.set_creator(self)
+            self.inputs = tuple(inputs)
+            self.outputs = tuple(weakref.ref(output) for output in outputs)
         return outputs if len(outputs) > 1 else outputs[0]
 
     def forward(self, *xs: np.ndarray) -> Union[np.ndarray, tuple[np.ndarray, ...]]:
