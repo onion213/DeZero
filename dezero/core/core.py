@@ -7,6 +7,8 @@ from dezero.core.config import Config
 
 
 class Variable:
+    __array_priority__ = 200
+
     def __init__(self, data: np.ndarray, name: Optional[str] = None) -> None:
         if data is not None:
             if not isinstance(data, np.ndarray):
