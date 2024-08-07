@@ -22,6 +22,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.flake8]
 max-line-length = 119
+exclude = ".venv"
 
 [tool.black]
 line-length = 119
