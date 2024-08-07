@@ -130,3 +130,4 @@ class TestVariable:
         assert x.ndim == 1
         assert x.size == 1
         assert x.dtype == np.dtype(np.int64)
+        assert len(x) == 1

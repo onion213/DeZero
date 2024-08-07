@@ -84,6 +84,15 @@ class Variable:
     def dtype(self) -> np.dtype:
         return self.data.dtype
 
+    def __len__(self) -> int:
+        return len(self.data)
+
+    def __repr__(self) -> str:
+        if self.data is None:
+            return "variable(None)"
+        p = str(self.data).replace("\n", "\n" + " " * 9)
+        return f"variable({p})"
+
 
 def as_array(x: Union[np.ndarray, np.number]) -> np.ndarray:
     if np.isscalar(x):
