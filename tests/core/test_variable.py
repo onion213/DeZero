@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from dezero.core import Variable
-from dezero.functions.functions import add, square
+from dezero.functions import add, square
 
 
 class TestVariable:

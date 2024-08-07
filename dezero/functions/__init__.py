@@ -1,6 +1,5 @@
-from dezero.functions.add import Add
-from dezero.functions.exp import Exp
-from dezero.functions.functions import add, exp, square
-from dezero.functions.square import Square
+from dezero.functions.add import Add, add
+from dezero.functions.exp import Exp, exp
+from dezero.functions.square import Square, square
 
 __all__ = ["Exp", "Square", "exp", "square", "Add", "add"]

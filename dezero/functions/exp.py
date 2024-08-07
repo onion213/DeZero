@@ -1,6 +1,6 @@
 import numpy as np
 
-from dezero.core import Function
+from dezero.core import Function, Variable
 
 
 class Exp(Function):
@@ -12,3 +12,11 @@ class Exp(Function):
 
         gx: np.ndarray = np.exp(x) * gy
         return gx
+
+
+def exp(x: Variable) -> Variable:
+    f = Exp()
+    y = f(x)
+    if not isinstance(y, Variable):
+        raise TypeError(f"`Exp` is 1-value function, but not returns Variable. returned value: {y}")
+    return y
