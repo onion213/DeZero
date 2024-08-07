@@ -16,6 +16,7 @@ class TestVariable:
         # Assert
         assert isinstance(var, Variable)
         assert var.data == np.array(1.0)
+        assert var.name is None
         assert var.grad is None
         assert var.creator is None
         assert var.generation == 0
@@ -106,3 +107,13 @@ class TestVariable:
 
         # Assert
         assert x.grad == np.array(3.0)
+
+    def test_変数にnameを設定できる(self):
+        # Arrange
+        x = Variable(np.array(3), name="x")
+
+        # Act
+        # Nothing for this case
+
+        # Assert
+        assert x.name == "x"

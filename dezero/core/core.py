@@ -7,12 +7,13 @@ from dezero.core.config import Config
 
 
 class Variable:
-    def __init__(self, data: np.ndarray) -> None:
+    def __init__(self, data: np.ndarray, name: Optional[str] = None) -> None:
         if data is not None:
             if not isinstance(data, np.ndarray):
                 raise TypeError(f"data must be np.ndarray. given: {type(data)}")
 
         self.data: np.ndarray = data
+        self.name: Optional[str] = name
         self.grad: Optional[np.ndarray] = None
         self.creator: Optional["Function"] = None
         self.generation: int = 0
