@@ -1,3 +1,4 @@
+import weakref
 from typing import Optional, Union
 
 import numpy as np
@@ -45,7 +46,7 @@ class Variable:
         seen_funcs = set((id(self.creator),))
         while funcs:
             f = funcs.pop()
-            gys: tuple[np.ndarray] = tuple(output.grad for output in f.outputs)
+            gys: tuple[np.ndarray] = tuple(output().grad for output in f.outputs)
             gxs = f.backward(*gys)
             if not isinstance(gxs, tuple):
                 gxs = (gxs,)
@@ -81,7 +82,7 @@ class Function:
         for output in outputs:
             output.set_creator(self)
         self.inputs = tuple(inputs)
-        self.outputs = outputs
+        self.outputs = tuple(weakref.ref(output) for output in outputs)
         return outputs if len(outputs) > 1 else outputs[0]
 
     def forward(self, *xs: np.ndarray) -> Union[np.ndarray, tuple[np.ndarray, ...]]:
