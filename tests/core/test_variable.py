@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from dezero.core import Variable
-from dezero.functions.functions import add, square
+from dezero.core import Variable, add
+from dezero.functions import square
 
 
 class TestVariable:
@@ -16,6 +16,7 @@ class TestVariable:
         # Assert
         assert isinstance(var, Variable)
         assert var.data == np.array(1.0)
+        assert var.name is None
         assert var.grad is None
         assert var.creator is None
         assert var.generation == 0
@@ -106,3 +107,27 @@ class TestVariable:
 
         # Assert
         assert x.grad == np.array(3.0)
+
+    def test_変数にnameを設定できる(self):
+        # Arrange
+        x = Variable(np.array(3), name="x")
+
+        # Act
+        # Nothing for this case
+
+        # Assert
+        assert x.name == "x"
+
+    def test_変数から直接dataのpropertyを取得できる(self):
+        # Arrange
+        x = Variable(np.array([3]))
+
+        # Act
+        # Nothing for this case
+
+        # Assert
+        assert x.shape == (1,)
+        assert x.ndim == 1
+        assert x.size == 1
+        assert x.dtype == np.dtype(np.int64)
+        assert len(x) == 1

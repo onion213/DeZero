@@ -3,8 +3,7 @@ from typing import Union
 import numpy as np
 import pytest
 
-from dezero.core import Variable
-from dezero.functions import Add
+from dezero.core import Add, Variable
 
 
 class TestAdd:
