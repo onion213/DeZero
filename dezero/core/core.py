@@ -19,7 +19,7 @@ class Variable:
         self.creator = func
         self.generation = func.generation + 1
 
-    def backward(self):
+    def backward(self, retain_grad: bool = True) -> None:
         if self.creator is None:
             raise AttributeError("`creator` is not set for this variable.")
 
@@ -58,6 +58,9 @@ class Variable:
                     x.grad = x.grad + gx
                 if x.creator is not None:
                     funcs, seen_funcs = add_func(x.creator, funcs, seen_funcs)
+            if not retain_grad:
+                for output in f.outputs:
+                    output().grad = None
 
     def cleargrad(self) -> None:
         self.grad = None
