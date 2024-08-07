@@ -68,6 +68,22 @@ class Variable:
     def cleargrad(self) -> None:
         self.grad = None
 
+    @property
+    def shape(self) -> tuple[int, ...]:
+        return self.data.shape
+
+    @property
+    def ndim(self) -> int:
+        return self.data.ndim
+
+    @property
+    def size(self) -> int:
+        return self.data.size
+
+    @property
+    def dtype(self) -> np.dtype:
+        return self.data.dtype
+
 
 def as_array(x: Union[np.ndarray, np.number]) -> np.ndarray:
     if np.isscalar(x):

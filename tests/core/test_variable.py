@@ -117,3 +117,16 @@ class TestVariable:
 
         # Assert
         assert x.name == "x"
+
+    def test_変数から直接dataのpropertyを取得できる(self):
+        # Arrange
+        x = Variable(np.array([3]))
+
+        # Act
+        # Nothing for this case
+
+        # Assert
+        assert x.shape == (1,)
+        assert x.ndim == 1
+        assert x.size == 1
+        assert x.dtype == np.dtype(np.int64)
