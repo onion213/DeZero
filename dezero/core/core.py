@@ -12,9 +12,11 @@ class Variable:
         self.data: np.ndarray = data
         self.grad: Optional[np.ndarray] = None
         self.creator: Optional["Function"] = None
+        self.generation: int = 0
 
     def set_creator(self, func: "Function") -> None:
         self.creator = func
+        self.generation = func.generation + 1
 
     def backward(self):
         if self.creator is None:
@@ -56,6 +58,8 @@ class Function:
         if not isinstance(ys, tuple):
             ys = (ys,)
         outputs = tuple(Variable(as_array(y)) for y in ys)
+
+        self.generation = max(input.generation for input in inputs)
 
         for output in outputs:
             output.set_creator(self)

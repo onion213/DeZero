@@ -1,12 +1,12 @@
 import numpy as np
 import pytest
 
-from dezero.core import Function, Variable
+from dezero.core import Variable
 from dezero.functions.functions import add, square
 
 
 class TestVariable:
-    def test_データを与えて初期化できること(self):
+    def test_データを与えて初期化できる(self):
         # Arrange
         var = Variable(np.array(1.0))
 
@@ -16,8 +16,11 @@ class TestVariable:
         # Assert
         assert isinstance(var, Variable)
         assert var.data == np.array(1.0)
+        assert var.grad is None
+        assert var.creator is None
+        assert var.generation == 0
 
-    def test_データを与えない場合初期化できないこと(self):
+    def test_データを与えない場合初期化できない(self):
         # Arrange
         with pytest.raises(TypeError) as e:
             _ = Variable()
@@ -28,7 +31,7 @@ class TestVariable:
         # Assert
         assert e.type is TypeError
 
-    def test_データにndarray以外を渡した場合初期化できないこと(self):
+    def test_データにndarray以外を渡した場合初期化できない(self):
         # Arrange
         with pytest.raises(TypeError) as e:
             _ = Variable(1.0)
@@ -39,7 +42,7 @@ class TestVariable:
         # Assert
         assert e.type is TypeError
 
-    def test_初期化後にデータを代入できること(self):
+    def test_初期化後にデータを代入できる(self):
         # Arrange
         var = Variable(np.array(1.0))
 
@@ -51,17 +54,20 @@ class TestVariable:
         assert var.data == np.array(2.0)
         assert var.grad is None
         assert var.creator is None
+        assert var.generation == 0
 
-    def test_set_creatorメソッドでcreatorを保存できること(self):
+    def test_順伝播でcreatorが保存される(self):
         # Arrange
-        var = Variable(np.array(1.0))
-        func = Function()
+        x = Variable(np.array(1.0))
+        func = square
+        y = func(x)
 
         # Act
-        var.set_creator(func)
+        # Nothing for this case
 
         # Assert
-        assert var.creator == func
+        assert y.creator is not None
+        assert y.generation == 1
 
     def test_逆伝播を正しく行える(self):
         # Arrange
