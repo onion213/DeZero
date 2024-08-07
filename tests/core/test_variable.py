@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from dezero.core import Variable
-from dezero.functions import add, square
+from dezero.core import Variable, add
+from dezero.functions import square
 
 
 class TestVariable:

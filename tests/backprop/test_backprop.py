@@ -13,7 +13,7 @@ class TestBackprop:
         c = dezero.functions.square(a)
 
         # Act
-        y = dezero.functions.add(b, c)
+        y = dezero.core.add(b, c)
 
         # Assert
         assert y.data == 32
@@ -24,7 +24,7 @@ class TestBackprop:
         a = dezero.functions.square(x)
         b = dezero.functions.square(a)
         c = dezero.functions.square(a)
-        y = dezero.functions.add(b, c)
+        y = dezero.core.add(b, c)
 
         # Act
         y.backward()

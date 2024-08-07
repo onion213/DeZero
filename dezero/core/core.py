@@ -93,6 +93,12 @@ class Variable:
         p = str(self.data).replace("\n", "\n" + " " * 9)
         return f"variable({p})"
 
+    def __add__(self, other: "Variable") -> "Variable":
+        return add(self, other)
+
+    def __mul__(self, other: "Variable") -> "Variable":
+        return mul(self, other)
+
 
 def as_array(x: Union[np.ndarray, np.number]) -> np.ndarray:
     if np.isscalar(x):
@@ -122,3 +128,39 @@ class Function:
 
     def backward(self, *gys: np.ndarray) -> Union[np.ndarray, tuple[np.ndarray, ...]]:
         raise NotImplementedError()
+
+
+class Add(Function):
+    def forward(self, x0: np.ndarray, x1: np.ndarray) -> np.ndarray:
+        return x0 + x1
+
+    def backward(self, gy: np.ndarray) -> tuple[np.ndarray]:
+        if self.inputs is None:
+            raise AttributeError
+        return gy, gy
+
+
+def add(x0: Variable, x1: Variable) -> Variable:
+    f = Add()
+    y = f(x0, x1)
+    if not isinstance(y, Variable):
+        raise TypeError(f"`Add` is 1-value function, but not returns Variable. returned value: {y}")
+    return y
+
+
+class Mul(Function):
+    def forward(self, x0: np.ndarray, x1: np.ndarray) -> np.ndarray:
+        return x0 * x1
+
+    def backward(self, gy: np.ndarray) -> tuple[np.ndarray]:
+        if self.inputs is None:
+            raise AttributeError
+        return gy * self.inputs[1].data, gy * self.inputs[0].data
+
+
+def mul(x0: Variable, x1: Variable) -> Variable:
+    f = Mul()
+    y = f(x0, x1)
+    if not isinstance(y, Variable):
+        raise TypeError(f"`Mul` is 1-value function, but not returns Variable. returned value: {y}")
+    return y
