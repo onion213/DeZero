@@ -25,7 +25,24 @@ class Variable:
         if self.grad is None:
             self.grad = np.ones_like(self.data)
 
+        def add_func(
+            f: "Function", funcs: list["Function"], seen_funcs: set[int]
+        ) -> tuple[list["Function"], set[int]]:
+            if id(f) in seen_funcs:
+                return funcs, seen_funcs
+            if len(funcs) == 0:
+                funcs = [f]
+                seen_funcs.add(id(f))
+                return funcs, seen_funcs
+            for i, func in enumerate(funcs):
+                if f.generation <= func.generation:
+                    funcs.insert(i, f)
+                    seen_funcs.add(id(f))
+                    break
+            return funcs, seen_funcs
+
         funcs = [self.creator]
+        seen_funcs = set((id(self.creator),))
         while funcs:
             f = funcs.pop()
             gys: tuple[np.ndarray] = tuple(output.grad for output in f.outputs)
@@ -39,7 +56,7 @@ class Variable:
                 else:
                     x.grad = x.grad + gx
                 if x.creator is not None:
-                    funcs.append(x.creator)
+                    funcs, seen_funcs = add_func(x.creator, funcs, seen_funcs)
 
     def cleargrad(self) -> None:
         self.grad = None
