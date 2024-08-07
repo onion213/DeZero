@@ -93,12 +93,6 @@ class Variable:
         p = str(self.data).replace("\n", "\n" + " " * 9)
         return f"variable({p})"
 
-    def __add__(self, other: "Variable") -> "Variable":
-        return add(self, other)
-
-    def __mul__(self, other: "Variable") -> "Variable":
-        return mul(self, other)
-
 
 def as_array(x: Union[np.ndarray, np.number]) -> np.ndarray:
     if np.isscalar(x):
@@ -107,7 +101,8 @@ def as_array(x: Union[np.ndarray, np.number]) -> np.ndarray:
 
 
 class Function:
-    def __call__(self, *inputs: Variable) -> Union[Variable, tuple[Variable, ...]]:
+    def __call__(self, *inputs: Union[Variable, np.ndarray]) -> Union[Variable, tuple[Variable, ...]]:
+        inputs = [as_variable(input) for input in inputs]
         xs = (input.data for input in inputs)
         ys = self.forward(*xs)
         if not isinstance(ys, tuple):
@@ -141,6 +136,8 @@ class Add(Function):
 
 
 def add(x0: Variable, x1: Variable) -> Variable:
+    if not isinstance(x1, Variable):
+        x1 = as_array(x1)
     f = Add()
     y = f(x0, x1)
     if not isinstance(y, Variable):
@@ -159,8 +156,24 @@ class Mul(Function):
 
 
 def mul(x0: Variable, x1: Variable) -> Variable:
+    if not isinstance(x1, Variable):
+        x1 = as_array(x1)
     f = Mul()
     y = f(x0, x1)
     if not isinstance(y, Variable):
         raise TypeError(f"`Mul` is 1-value function, but not returns Variable. returned value: {y}")
     return y
+
+
+def as_variable(obj: Union[Variable, np.ndarray]) -> Variable:
+    if isinstance(obj, Variable):
+        return obj
+    if isinstance(obj, np.ndarray):
+        return Variable(obj)
+    raise TypeError(f"Invalid type: {type(obj)}")
+
+
+Variable.__add__ = add
+Variable.__radd__ = add
+Variable.__mul__ = mul
+Variable.__rmul__ = mul
