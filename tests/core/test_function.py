@@ -15,7 +15,7 @@ class TestFunction:
             _ = f(v)
 
         # assert
-        assert e.type == NotImplementedError
+        assert e.type is NotImplementedError
 
     def test_forwardメソッドを呼ぶと例外を返す(self):
         # Arrange
@@ -27,7 +27,7 @@ class TestFunction:
             _ = f.forward(x)
 
         # assert
-        assert e.type == NotImplementedError
+        assert e.type is NotImplementedError
 
     def test_backwardメソッドを呼ぶと例外を返す(self):
         # Arrange
@@ -39,4 +39,4 @@ class TestFunction:
             _ = f.backward(gy)
 
         # assert
-        assert e.type == NotImplementedError
+        assert e.type is NotImplementedError

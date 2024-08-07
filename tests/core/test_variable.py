@@ -26,7 +26,7 @@ class TestVariable:
         # Nothing for this case
 
         # Assert
-        assert e.type == TypeError
+        assert e.type is TypeError
 
     def test_データにndarray以外を渡した場合初期化できないこと(self):
         # Arrange
@@ -37,7 +37,7 @@ class TestVariable:
         # Nothing for this case
 
         # Assert
-        assert e.type == TypeError
+        assert e.type is TypeError
 
     def test_初期化後にデータを代入できること(self):
         # Arrange
@@ -49,6 +49,8 @@ class TestVariable:
         # Assert
         assert isinstance(var, Variable)
         assert var.data == np.array(2.0)
+        assert var.grad is None
+        assert var.creator is None
 
     def test_set_creatorメソッドでcreatorを保存できること(self):
         # Arrange
