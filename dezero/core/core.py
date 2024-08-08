@@ -3,7 +3,7 @@ from typing import Optional, Union
 
 import numpy as np
 
-from dezero.core.config import Config
+from dezero.core import config
 
 
 class Variable:
@@ -111,7 +111,7 @@ class Function:
             ys = (ys,)
         outputs = tuple(Variable(as_array(y)) for y in ys)
 
-        if Config.enable_backprop:
+        if config.Config.enable_backprop:
             self.generation = max(input.generation for input in inputs)
 
             for output in outputs:
