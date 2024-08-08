@@ -3,7 +3,13 @@ from typing import Optional, Union
 
 import numpy as np
 
-from dezero.core.config import Config
+from dezero.core import config
+
+
+def as_array(x: Union[np.ndarray, np.number]) -> np.ndarray:
+    if np.isscalar(x):
+        return np.array(x)
+    return x
 
 
 class Variable:
@@ -19,6 +25,15 @@ class Variable:
         self.grad: Optional[np.ndarray] = None
         self.creator: Optional["Function"] = None
         self.generation: int = 0
+
+    def __len__(self) -> int:
+        return len(self.data)
+
+    def __repr__(self) -> str:
+        if self.data is None:
+            return "variable(None)"
+        p = str(self.data).replace("\n", "\n" + " " * 9)
+        return f"variable({p})"
 
     def set_creator(self, func: "Function") -> None:
         self.creator = func
@@ -86,20 +101,13 @@ class Variable:
     def dtype(self) -> np.dtype:
         return self.data.dtype
 
-    def __len__(self) -> int:
-        return len(self.data)
 
-    def __repr__(self) -> str:
-        if self.data is None:
-            return "variable(None)"
-        p = str(self.data).replace("\n", "\n" + " " * 9)
-        return f"variable({p})"
-
-
-def as_array(x: Union[np.ndarray, np.number]) -> np.ndarray:
-    if np.isscalar(x):
-        return np.array(x)
-    return x
+def as_variable(obj: Union[Variable, np.ndarray]) -> Variable:
+    if isinstance(obj, Variable):
+        return obj
+    if isinstance(obj, np.ndarray):
+        return Variable(obj)
+    raise TypeError(f"Invalid type: {type(obj)}")
 
 
 class Function:
@@ -111,7 +119,7 @@ class Function:
             ys = (ys,)
         outputs = tuple(Variable(as_array(y)) for y in ys)
 
-        if Config.enable_backprop:
+        if config.Config.enable_backprop:
             self.generation = max(input.generation for input in inputs)
 
             for output in outputs:
@@ -260,14 +268,6 @@ class Pow(Function):
 def pow(x: Variable, c: float) -> Variable:
     f = Pow(c)
     return f(x)
-
-
-def as_variable(obj: Union[Variable, np.ndarray]) -> Variable:
-    if isinstance(obj, Variable):
-        return obj
-    if isinstance(obj, np.ndarray):
-        return Variable(obj)
-    raise TypeError(f"Invalid type: {type(obj)}")
 
 
 Variable.__add__ = add

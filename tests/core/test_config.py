@@ -1,4 +1,4 @@
-from dezero.core import Config, no_grad, using_config
+from dezero.core.config import Config, no_grad, using_config
 
 
 class TestConfig:
