@@ -59,11 +59,12 @@ class Variable:
                 if f.generation <= func.generation:
                     funcs.insert(i, f)
                     seen_funcs.add(id(f))
-                    break
+                    return funcs, seen_funcs
+            funcs.append(f)
+            seen_funcs.add(id(f))
             return funcs, seen_funcs
 
-        funcs = [self.creator]
-        seen_funcs = set((id(self.creator),))
+        funcs, seen_funcs = add_func(self.creator, [], set())
         while funcs:
             f = funcs.pop()
             gys: tuple[np.ndarray] = tuple(output().grad for output in f.outputs)
@@ -261,7 +262,7 @@ class Pow(Function):
     def backward(self, gy: np.ndarray) -> np.ndarray:
         (x,) = self.inputs
         c = self.c
-        gx = c * x ** (c - 1) * gy
+        gx = c * x.data ** (c - 1) * gy
         return gx
 
 
