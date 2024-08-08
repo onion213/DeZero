@@ -209,8 +209,8 @@ def sub(x0: Variable, x1: Variable) -> Variable:
 
 
 def rsub(x0: Variable, x1: Variable) -> Variable:
-    if not isinstance(x0, Variable):
-        x0 = as_array(x0)
+    if not isinstance(x1, Variable):
+        x1 = as_array(x1)
     f = Sub()
     y = f(x1, x0)
     if not isinstance(y, Variable):
