@@ -1,6 +1,7 @@
 from dezero.functions.broadcast_to_sum_to import BroadcastTo, SumTo, broadcast_to, sum_to
 from dezero.functions.exp import Exp, exp
 from dezero.functions.goldstein_price import goldstein_price
+from dezero.functions.matmul import MatMul, matmul
 from dezero.functions.matyas import matyas
 from dezero.functions.reshape import Reshape, reshape
 from dezero.functions.rosenbrock import rosenbrock
@@ -33,4 +34,6 @@ __all__ = [
     "sum_to",
     "BroadcastTo",
     "SumTo",
+    "MatMul",
+    "matmul",
 ]

@@ -110,6 +110,10 @@ class Variable:
             shape = shape[0]
         return dezero.functions.reshape(self, shape)
 
+    @property
+    def T(self) -> "Variable":
+        return dezero.functions.transpose(self)
+
 
 def as_variable(obj: Union[Variable, np.ndarray]) -> Variable:
     if isinstance(obj, Variable):
