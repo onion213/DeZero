@@ -87,7 +87,7 @@ class TestVariable:
         y = add(x, x)
 
         # Act
-        y.backward()
+        y.backward(retain_grad=True)
 
         # Assert
         assert y.grad.data == np.array(1.0)
