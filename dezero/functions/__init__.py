@@ -7,6 +7,7 @@ from dezero.functions.matyas import matyas
 from dezero.functions.mean_squared_error import MeanSquaredError, mean_squared_error
 from dezero.functions.reshape import Reshape, reshape
 from dezero.functions.rosenbrock import rosenbrock
+from dezero.functions.sigmoid import Sigmoid, sigmoid
 from dezero.functions.sphere import sphere
 from dezero.functions.square import Square, square
 from dezero.functions.tanh import Tanh, tanh
@@ -42,4 +43,6 @@ __all__ = [
     "MeanSquaredError",
     "Linear",
     "linear",
+    "Sigmoid",
+    "sigmoid",
 ]
