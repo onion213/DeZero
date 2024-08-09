@@ -1,3 +1,4 @@
+from dezero.functions.broadcast_to_sum_to import BroadcastTo, SumTo, broadcast_to, sum_to
 from dezero.functions.exp import Exp, exp
 from dezero.functions.goldstein_price import goldstein_price
 from dezero.functions.matyas import matyas
@@ -28,4 +29,8 @@ __all__ = [
     "reshape",
     "Transpose",
     "transpose",
+    "broadcast_to",
+    "sum_to",
+    "BroadcastTo",
+    "SumTo",
 ]
