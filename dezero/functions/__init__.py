@@ -1,6 +1,7 @@
 from dezero.functions.exp import Exp, exp
 from dezero.functions.goldstein_price import goldstein_price
 from dezero.functions.matyas import matyas
+from dezero.functions.reshape import Reshape, reshape
 from dezero.functions.rosenbrock import rosenbrock
 from dezero.functions.sphere import sphere
 from dezero.functions.square import Square, square
@@ -22,4 +23,6 @@ __all__ = [
     "cos",
     "Tanh",
     "tanh",
+    "Reshape",
+    "reshape",
 ]
