@@ -79,7 +79,7 @@ class TestVariable:
         y.backward()
 
         # Assert
-        assert x.grad == np.array(2.0)
+        assert x.grad.data == np.array(2.0)
 
     def test_変数を繰り返し使用できる(self):
         # Arrange
@@ -90,8 +90,8 @@ class TestVariable:
         y.backward()
 
         # Assert
-        assert y.grad == np.array(1.0)
-        assert x.grad == np.array(2.0)
+        assert y.grad.data == np.array(1.0)
+        assert x.grad.data == np.array(2.0)
 
     def test_変数のgradを初期化できる(self):
         # Arrange
@@ -106,7 +106,7 @@ class TestVariable:
         y2.backward()
 
         # Assert
-        assert x.grad == np.array(3.0)
+        assert x.grad.data == np.array(3.0)
 
     def test_変数にnameを設定できる(self):
         # Arrange

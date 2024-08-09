@@ -43,7 +43,7 @@ class TestMul:
         expected_output = (gy * x1, gy * x0)
 
         # Act
-        gxs = f.backward(gy)
+        gxs = tuple(gx.data for gx in f.backward(gy))
 
         # Assert
         assert gxs == expected_output
