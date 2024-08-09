@@ -30,4 +30,4 @@ class TestBackprop:
         y.backward()
 
         # Assert
-        assert x.grad == 64
+        assert x.grad.data == 64

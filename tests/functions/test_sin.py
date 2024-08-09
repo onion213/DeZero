@@ -39,7 +39,7 @@ class TestExp:
         gx = f.backward(gy)
 
         # Assert
-        assert gx == expected_output
+        assert gx.data == expected_output
 
     def test_forwardされていない関数でbackwardをすると例外が発生する(self):
         # Arrange

@@ -22,7 +22,7 @@ class Variable:
 
         self.data: np.ndarray = data
         self.name: Optional[str] = name
-        self.grad: Optional[np.ndarray] = None
+        self.grad: Optional[Variable] = None
         self.creator: Optional["Function"] = None
         self.generation: int = 0
 
@@ -39,12 +39,12 @@ class Variable:
         self.creator = func
         self.generation = func.generation + 1
 
-    def backward(self, retain_grad: bool = True) -> None:
+    def backward(self, retain_grad: bool = False, create_graph: bool = False) -> None:
         if self.creator is None:
             raise AttributeError("`creator` is not set for this variable.")
 
         if self.grad is None:
-            self.grad = np.ones_like(self.data)
+            self.grad = Variable(np.ones_like(self.data))
 
         def add_func(
             f: "Function", funcs: list["Function"], seen_funcs: set[int]
@@ -68,17 +68,19 @@ class Variable:
         while funcs:
             f = funcs.pop()
             gys: tuple[np.ndarray] = tuple(output().grad for output in f.outputs)
-            gxs = f.backward(*gys)
-            if not isinstance(gxs, tuple):
-                gxs = (gxs,)
 
-            for x, gx in zip(f.inputs, gxs):
-                if x.grad is None:
-                    x.grad = gx
-                else:
-                    x.grad = x.grad + gx
-                if x.creator is not None:
-                    funcs, seen_funcs = add_func(x.creator, funcs, seen_funcs)
+            with config.using_config("enable_backprop", create_graph):
+                gxs = f.backward(*gys)
+                if not isinstance(gxs, tuple):
+                    gxs = (gxs,)
+
+                for x, gx in zip(f.inputs, gxs):
+                    if x.grad is None:
+                        x.grad = gx
+                    else:
+                        x.grad = x.grad + gx
+                    if x.creator is not None:
+                        funcs, seen_funcs = add_func(x.creator, funcs, seen_funcs)
             if not retain_grad:
                 for output in f.outputs:
                     output().grad = None
@@ -113,15 +115,15 @@ def as_variable(obj: Union[Variable, np.ndarray]) -> Variable:
 
 class Function:
     def __call__(self, *inputs: Union[Variable, np.ndarray]) -> Union[Variable, tuple[Variable, ...]]:
-        inputs = [as_variable(input) for input in inputs]
-        xs = (input.data for input in inputs)
+        inputs = [as_variable(x) for x in inputs]
+        xs = tuple(x.data for x in inputs)
         ys = self.forward(*xs)
         if not isinstance(ys, tuple):
             ys = (ys,)
-        outputs = tuple(Variable(as_array(y)) for y in ys)
+        outputs = [Variable(as_array(y)) for y in ys]
 
         if config.Config.enable_backprop:
-            self.generation = max(input.generation for input in inputs)
+            self.generation = max(x.generation for x in inputs)
 
             for output in outputs:
                 output.set_creator(self)
@@ -132,7 +134,7 @@ class Function:
     def forward(self, *xs: np.ndarray) -> Union[np.ndarray, tuple[np.ndarray, ...]]:
         raise NotImplementedError()
 
-    def backward(self, *gys: np.ndarray) -> Union[np.ndarray, tuple[np.ndarray, ...]]:
+    def backward(self, *gys: Variable) -> Union[Variable, tuple[Variable, ...]]:
         raise NotImplementedError()
 
 
@@ -140,7 +142,7 @@ class Add(Function):
     def forward(self, x0: np.ndarray, x1: np.ndarray) -> np.ndarray:
         return x0 + x1
 
-    def backward(self, gy: np.ndarray) -> tuple[np.ndarray]:
+    def backward(self, gy: Variable) -> tuple[Variable, Variable]:
         if self.inputs is None:
             raise AttributeError
         return gy, gy
@@ -160,10 +162,10 @@ class Mul(Function):
     def forward(self, x0: np.ndarray, x1: np.ndarray) -> np.ndarray:
         return x0 * x1
 
-    def backward(self, gy: np.ndarray) -> tuple[np.ndarray]:
+    def backward(self, gy: Variable) -> tuple[Variable, Variable]:
         if self.inputs is None:
             raise AttributeError
-        return gy * self.inputs[1].data, gy * self.inputs[0].data
+        return gy * self.inputs[1], gy * self.inputs[0]
 
 
 def mul(x0: Variable, x1: Variable) -> Variable:
@@ -180,7 +182,7 @@ class Neg(Function):
     def forward(self, x: np.ndarray) -> np.ndarray:
         return -x
 
-    def backward(self, gy: np.ndarray) -> np.ndarray:
+    def backward(self, gy: Variable) -> Variable:
         return -gy
 
 
@@ -193,7 +195,7 @@ class Sub(Function):
     def forward(self, x0: np.ndarray, x1: np.ndarray) -> np.ndarray:
         return x0 - x1
 
-    def backward(self, gy: np.ndarray) -> tuple[np.ndarray]:
+    def backward(self, gy: Variable) -> tuple[Variable, Variable]:
         if self.inputs is None:
             raise AttributeError
         return gy, -gy
@@ -223,12 +225,12 @@ class Div(Function):
     def forward(self, x0: np.ndarray, x1: np.ndarray) -> np.ndarray:
         return x0 / x1
 
-    def backward(self, gy: np.ndarray) -> tuple[np.ndarray]:
+    def backward(self, gy: Variable) -> tuple[Variable, Variable]:
         if self.inputs is None:
             raise AttributeError
         x0, x1 = self.inputs
-        gx0 = gy / x1.data
-        gx1 = gy * (-x0.data / x1.data**2)
+        gx0 = gy / x1
+        gx1 = gy * (-x0 / x1**2)
         return gx0, gx1
 
 
@@ -259,10 +261,10 @@ class Pow(Function):
     def forward(self, x: np.ndarray) -> np.ndarray:
         return x**self.c
 
-    def backward(self, gy: np.ndarray) -> np.ndarray:
+    def backward(self, gy: Variable) -> Variable:
         (x,) = self.inputs
         c = self.c
-        gx = c * x.data ** (c - 1) * gy
+        gx = c * x ** (c - 1) * gy
         return gx
 
 
