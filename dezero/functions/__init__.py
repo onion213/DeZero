@@ -4,6 +4,7 @@ from dezero.functions.matyas import matyas
 from dezero.functions.rosenbrock import rosenbrock
 from dezero.functions.sphere import sphere
 from dezero.functions.square import Square, square
+from dezero.functions.tanh import Tanh, tanh
 from dezero.functions.trigonometric import Cos, Sin, cos, sin
 
 __all__ = [
@@ -16,8 +17,9 @@ __all__ = [
     "goldstein_price",
     "Sin",
     "sin",
-    "sin_taylor",
     "rosenbrock",
     "Cos",
     "cos",
+    "Tanh",
+    "tanh",
 ]
