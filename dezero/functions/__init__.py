@@ -3,6 +3,7 @@ from dezero.functions.exp import Exp, exp
 from dezero.functions.goldstein_price import goldstein_price
 from dezero.functions.matmul import MatMul, matmul
 from dezero.functions.matyas import matyas
+from dezero.functions.mean_squared_error import MeanSquaredError, mean_squared_error
 from dezero.functions.reshape import Reshape, reshape
 from dezero.functions.rosenbrock import rosenbrock
 from dezero.functions.sphere import sphere
@@ -36,4 +37,6 @@ __all__ = [
     "SumTo",
     "MatMul",
     "matmul",
+    "mean_squared_error",
+    "MeanSquaredError",
 ]
