@@ -39,7 +39,7 @@ class Variable:
         self.creator = func
         self.generation = func.generation + 1
 
-    def backward(self, retain_grad: bool = True) -> None:
+    def backward(self, retain_grad: bool = True, create_graph: bool = False) -> None:
         if self.creator is None:
             raise AttributeError("`creator` is not set for this variable.")
 
@@ -68,17 +68,19 @@ class Variable:
         while funcs:
             f = funcs.pop()
             gys: tuple[np.ndarray] = tuple(output().grad for output in f.outputs)
-            gxs = f.backward(*gys)
-            if not isinstance(gxs, tuple):
-                gxs = (gxs,)
 
-            for x, gx in zip(f.inputs, gxs):
-                if x.grad is None:
-                    x.grad = gx
-                else:
-                    x.grad = x.grad + gx
-                if x.creator is not None:
-                    funcs, seen_funcs = add_func(x.creator, funcs, seen_funcs)
+            with config.using_config("enable_backprop", create_graph):
+                gxs = f.backward(*gys)
+                if not isinstance(gxs, tuple):
+                    gxs = (gxs,)
+
+                for x, gx in zip(f.inputs, gxs):
+                    if x.grad is None:
+                        x.grad = gx
+                    else:
+                        x.grad = x.grad + gx
+                    if x.creator is not None:
+                        funcs, seen_funcs = add_func(x.creator, funcs, seen_funcs)
             if not retain_grad:
                 for output in f.outputs:
                     output().grad = None
