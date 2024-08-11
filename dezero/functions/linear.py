@@ -1,7 +1,7 @@
 import numpy as np
 
 from dezero.core import Function
-from dezero.functions import matmul
+from dezero.functions.matmul import matmul
 
 
 class Linear(Function):

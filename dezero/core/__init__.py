@@ -16,6 +16,9 @@ from dezero.core.core import (
     pow,
     sub,
 )
+from dezero.core.layer import Layer
+from dezero.core.model import Model
+from dezero.core.parameter import Parameter
 
 __all__ = [
     "as_variable",
@@ -35,4 +38,7 @@ __all__ = [
     "mul",
     "neg",
     "pow",
+    "Parameter",
+    "Layer",
+    "Model",
 ]
