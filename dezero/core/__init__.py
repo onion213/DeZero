@@ -17,6 +17,7 @@ from dezero.core.core import (
     sub,
 )
 from dezero.core.layer import Layer
+from dezero.core.model import Model
 from dezero.core.parameter import Parameter
 
 __all__ = [
@@ -39,4 +40,5 @@ __all__ = [
     "pow",
     "Parameter",
     "Layer",
+    "Model",
 ]
