@@ -9,13 +9,17 @@ class Layer:
         self._params: set[Parameter] = set()
 
     def __setattr__(self, name: str, value: Variable) -> None:
-        if isinstance(value, Parameter):
+        if isinstance(value, (Parameter, Layer)):
             self._params.add(name)
         super().__setattr__(name, value)
 
     def params(self) -> set[Parameter]:
         for name in self._params:
-            yield self.__dict__[name]
+            obj = self.__dict__[name]
+            if isinstance(obj, Layer):
+                yield from obj.params()
+            else:
+                yield obj
 
     def __call__(self, *inputs) -> Variable:
         outputs = self.forward(*inputs)
