@@ -19,4 +19,4 @@ class Dataset:
         return len(self.data)
 
     def prepare(self):
-        raise NotImplementedError()
+        pass
