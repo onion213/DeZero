@@ -1,4 +1,4 @@
-from dezero.core.config import no_grad, using_config
+from dezero.core.config import no_grad, test_mode, using_config
 from dezero.core.core import (
     Add,
     Div,
@@ -47,4 +47,5 @@ __all__ = [
     "Optimizer",
     "Dataset",
     "as_array",
+    "test_mode",
 ]
