@@ -114,6 +114,9 @@ class Variable:
     def T(self) -> "Variable":
         return dezero.functions.transpose(self)
 
+    def sum(self, axis: Optional[int] = None, keepdims: bool = False) -> "Variable":
+        return dezero.functions.sum(self, axis, keepdims)
+
 
 def as_variable(obj: Union[Variable, np.ndarray]) -> Variable:
     if isinstance(obj, Variable):

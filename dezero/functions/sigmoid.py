@@ -8,7 +8,7 @@ class Sigmoid(Function):
         return 1 / (1 + np.exp(-x))
 
     def backward(self, gy: Variable) -> Variable:
-        y: np.ndarray = self.outputs[0].data
+        y: np.ndarray = self.outputs[0]().data
         gx: np.ndarray = gy * y * (1 - y)
         return gx
 
