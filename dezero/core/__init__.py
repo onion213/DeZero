@@ -16,6 +16,7 @@ from dezero.core.core import (
     pow,
     sub,
 )
+from dezero.core.dataset import Dataset
 from dezero.core.layer import Layer
 from dezero.core.model import Model
 from dezero.core.optimizer import Optimizer
@@ -43,4 +44,5 @@ __all__ = [
     "Layer",
     "Model",
     "Optimizer",
+    "Dataset",
 ]
