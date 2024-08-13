@@ -1,4 +1,4 @@
-from dezero.core.config import no_grad, test_mode, using_config
+from dezero.core.config import Config, no_grad, test_mode, using_config
 from dezero.core.core import (
     Add,
     Div,
@@ -48,4 +48,5 @@ __all__ = [
     "Dataset",
     "as_array",
     "test_mode",
+    "Config",
 ]

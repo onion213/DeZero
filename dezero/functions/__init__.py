@@ -1,6 +1,7 @@
 from dezero.functions.accuracy import accuracy
 from dezero.functions.broadcast_to_sum_to import BroadcastTo, SumTo, broadcast_to, sum_to
 from dezero.functions.clip import Clip, clip
+from dezero.functions.dropout import dropout
 from dezero.functions.exp import Exp, exp
 from dezero.functions.goldstein_price import goldstein_price
 from dezero.functions.linear import Linear, linear
@@ -60,4 +61,5 @@ __all__ = [
     "Clip",
     "clip",
     "accuracy",
+    "dropout",
 ]
