@@ -286,6 +286,38 @@ def pow(x: Variable, c: float) -> Variable:
     return f(x)
 
 
+class GetItem(Function):
+    def __init__(self, slices: tuple[Union[int, slice]]) -> None:
+        self.slices = slices
+
+    def forward(self, x: np.ndarray) -> np.ndarray:
+        return x[self.slices]
+
+    def backward(self, gy: Variable) -> Variable:
+        (x,) = self.inputs
+        f = GetItemGrad(self.slices, x.shape)
+        return f(gy)
+
+
+class GetItemGrad(Function):
+    def __init__(self, slices, in_shape):
+        self.slices = slices
+        self.in_shape = in_shape
+
+    def forward(self, gy: np.ndarray) -> np.ndarray:
+        gx = np.zeros(self.in_shape, dtype=gy.dtype)
+        np.add.at(gx, self.slices, gy)
+        return gx
+
+    def backward(self, ggx: Variable) -> Variable:
+        return get_item(ggx, self.slices)
+
+
+def get_item(x: Variable, slices: tuple[Union[int, slice]]) -> Variable:
+    f = GetItem(slices)
+    return f(x)
+
+
 Variable.__add__ = add
 Variable.__radd__ = add
 Variable.__mul__ = mul
@@ -296,3 +328,4 @@ Variable.__rsub__ = rsub
 Variable.__truediv__ = div
 Variable.__rtruediv__ = rdiv
 Variable.__pow__ = pow
+Variable.__getitem__ = get_item
