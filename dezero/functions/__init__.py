@@ -8,6 +8,7 @@ from dezero.functions.mean_squared_error import MeanSquaredError, mean_squared_e
 from dezero.functions.reshape import Reshape, reshape
 from dezero.functions.rosenbrock import rosenbrock
 from dezero.functions.sigmoid import Sigmoid, sigmoid
+from dezero.functions.softmax import softmax1d
 from dezero.functions.sphere import sphere
 from dezero.functions.square import Square, square
 from dezero.functions.sum import Sum, sum
@@ -48,4 +49,5 @@ __all__ = [
     "sigmoid",
     "Sum",
     "sum",
+    "softmax1d",
 ]
