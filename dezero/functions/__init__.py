@@ -1,4 +1,5 @@
 from dezero.functions.broadcast_to_sum_to import BroadcastTo, SumTo, broadcast_to, sum_to
+from dezero.functions.clip import Clip, clip
 from dezero.functions.exp import Exp, exp
 from dezero.functions.goldstein_price import goldstein_price
 from dezero.functions.linear import Linear, linear
@@ -55,4 +56,6 @@ __all__ = [
     "softmax_cross_entropy_simple",
     "log",
     "Log",
+    "Clip",
+    "clip",
 ]

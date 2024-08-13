@@ -1,6 +1,7 @@
 import numpy as np
 
 from dezero.core import Variable, as_variable
+from dezero.functions.clip import clip
 from dezero.functions.exp import exp
 from dezero.functions.log import log
 
@@ -25,7 +26,7 @@ def softmax_cross_entropy_simple(x: Variable | np.ndarray, t: Variable | np.ndar
     x, t = as_variable(x), as_variable(t)
     N = x.shape[0]
     p = softmax_simple(x)
-    p = np.clip(p, 1e-15, 1.0)  # To avoid log(0)
+    p = clip(p, 1e-15, 1.0)  # To avoid log(0)
     log_p = log(p)
     tlog_p = log_p[np.arange(N), t.data]
     y = -1 * tlog_p.sum() / N
