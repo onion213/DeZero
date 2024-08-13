@@ -1,3 +1,4 @@
+from dezero.functions.accuracy import accuracy
 from dezero.functions.broadcast_to_sum_to import BroadcastTo, SumTo, broadcast_to, sum_to
 from dezero.functions.clip import Clip, clip
 from dezero.functions.exp import Exp, exp
@@ -58,4 +59,5 @@ __all__ = [
     "Log",
     "Clip",
     "clip",
+    "accuracy",
 ]

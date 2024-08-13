@@ -9,6 +9,7 @@ from dezero.core.core import (
     Sub,
     Variable,
     add,
+    as_array,
     as_variable,
     div,
     mul,
@@ -45,4 +46,5 @@ __all__ = [
     "Model",
     "Optimizer",
     "Dataset",
+    "as_array",
 ]
