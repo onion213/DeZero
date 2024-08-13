@@ -1,9 +1,22 @@
+from typing import Callable
+
 import numpy as np
 
 
 class Dataset:
-    def __init__(self, train: bool = True):
+    def __init__(
+        self, train: bool = True, transform: Callable | None = None, target_transform: Callable | None = None
+    ):
         self.train: bool = train
+        if transform is None:
+            self.transform: callable = lambda x: x
+        else:
+            self.transform = transform
+        if target_transform is None:
+            self.target_transform: callable = lambda x: x
+        else:
+            self.target_transform = target_transform
+
         self.data = None
         self.label = None
         self.prepare()
