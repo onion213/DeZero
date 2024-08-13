@@ -18,6 +18,7 @@ from dezero.core.core import (
 )
 from dezero.core.layer import Layer
 from dezero.core.model import Model
+from dezero.core.optimizer import Optimizer
 from dezero.core.parameter import Parameter
 
 __all__ = [
@@ -41,4 +42,5 @@ __all__ = [
     "Parameter",
     "Layer",
     "Model",
+    "Optimizer",
 ]

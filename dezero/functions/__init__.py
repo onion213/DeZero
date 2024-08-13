@@ -10,6 +10,7 @@ from dezero.functions.rosenbrock import rosenbrock
 from dezero.functions.sigmoid import Sigmoid, sigmoid
 from dezero.functions.sphere import sphere
 from dezero.functions.square import Square, square
+from dezero.functions.sum import Sum, sum
 from dezero.functions.tanh import Tanh, tanh
 from dezero.functions.transpose import Transpose, transpose
 from dezero.functions.trigonometric import Cos, Sin, cos, sin
@@ -45,4 +46,6 @@ __all__ = [
     "linear",
     "Sigmoid",
     "sigmoid",
+    "Sum",
+    "sum",
 ]
