@@ -3,6 +3,8 @@ import numpy as np
 from dezero.core import Variable, as_variable
 from dezero.functions.exp import exp
 
+# TODO: Implement SoftMax class
+
 
 def softmax1d(x: Variable | np.ndarray) -> Variable:
     x = as_variable(x)
