@@ -1,4 +1,5 @@
 import dezero.core
+import dezero.datasets
 import dezero.functions
 import dezero.models
 import dezero.optimizers
@@ -15,4 +16,5 @@ __all__ = [
     "plot_dot_graph",
     "dezero.optimizers",
     "dezero.models",
+    "dezero.datasets",
 ]
