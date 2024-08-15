@@ -8,11 +8,9 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 numpy = "^1.25.0"
+ruff = "^0.5.7"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.3.0"
-pyproject-flake8 = "^6.0.0.post1"
-isort = "^5.12.0"
 pytest = "^7.4.0"
 pre-commit = "^3.3.3"
 
@@ -20,14 +18,12 @@ pre-commit = "^3.3.3"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.flake8]
-max-line-length = 119
-exclude = ".venv"
-ignore = "E203"
-
-[tool.black]
+[tool.ruff]
+target-version = "py312"
 line-length = 119
 
-[tool.isort]
-profile = "black"
-line_length = 119
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.ruff.lint]
+select = ["I"]
